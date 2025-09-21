@@ -79,7 +79,7 @@ public class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore 
     ///   - key: The typed key to load.
     ///   - default: The default value returned if no value exists or if initialization fails.
     /// - Returns: The stored value or the provided default.
-    func load<T: RawRepresentable>(_ key: Key, default: T) -> T where T.RawValue == Int {
+    public func load<T: RawRepresentable>(_ key: Key, default: T) -> T where T.RawValue == Int {
         return (userDefaults.value(forKey: prefixed(key)) as? T.RawValue).flatMap {
             T(rawValue: $0)
         } ?? `default`
