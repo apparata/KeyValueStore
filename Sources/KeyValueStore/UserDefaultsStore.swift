@@ -27,7 +27,7 @@ import Foundation
 /// store.save(1, for: .launchCount)
 /// let count: Int = store.load(.launchCount, default: 0)
 /// ```
-class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where Key.RawValue == String {
+public class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where Key.RawValue == String {
 
     /// The underlying `UserDefaults` instance used for persistence.
     private let userDefaults: UserDefaults
@@ -48,7 +48,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     ///   - userDefaults: The `UserDefaults` instance to use. Defaults to `.standard`.
     ///   - keyedBy: The key type used by this store (usually an enum). Constrained to `RawRepresentable` with `String` raw values.
     ///   - keyPrefix: A string prefix used to namespace all keys in `UserDefaults`.
-    init(_ userDefaults: UserDefaults = .standard, keyedBy: Key.Type, prefixedBy keyPrefix: String) {
+    public init(_ userDefaults: UserDefaults = .standard, keyedBy: Key.Type, prefixedBy keyPrefix: String) {
         self.userDefaults = userDefaults
         self.keyPrefix = keyPrefix
     }
@@ -59,7 +59,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     ///   - key: The typed key to load.
     ///   - default: The default value returned if no value exists or if type casting fails.
     /// - Returns: The stored numeric value or the provided default.
-    func load<T: Numeric>(_ key: Key, default: T) -> T {
+    public func load<T: Numeric>(_ key: Key, default: T) -> T {
         userDefaults.value(forKey: prefixed(key)) as? T ?? `default`
     }
 
@@ -69,7 +69,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     ///   - key: The typed key to load.
     ///   - default: The default value returned if no value exists or if type casting fails.
     /// - Returns: The stored value or the provided default.
-    func load<T: StringProtocol>(_ key: Key, default: T) -> T {
+    public func load<T: StringProtocol>(_ key: Key, default: T) -> T {
         userDefaults.value(forKey: prefixed(key)) as? T ?? `default`
     }
 
@@ -91,7 +91,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     ///   - key: The typed key to load.
     ///   - default: The default value returned if no value exists or if initialization fails.
     /// - Returns: The stored value or the provided default.
-    func load<T: RawRepresentable>(_ key: Key, default: T) -> T where T.RawValue == String {
+    public func load<T: RawRepresentable>(_ key: Key, default: T) -> T where T.RawValue == String {
         userDefaults.string(forKey: prefixed(key)).flatMap {
             T(rawValue: $0)
         } ?? `default`
@@ -105,7 +105,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     ///   - key: The typed key to load.
     ///   - default: The default value returned if no value exists or if decoding fails.
     /// - Returns: The decoded value or the provided default.
-    func load<T: Codable>(_ key: Key, default: T) -> T {
+    public func load<T: Codable>(_ key: Key, default: T) -> T {
         do {
             guard let data = userDefaults.data(forKey: prefixed(key)) else {
                 return `default`
@@ -122,7 +122,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     /// - Parameters:
     ///   - value: The numeric value to store.
     ///   - key: The typed key under which to store the value.
-    func save<T: Numeric>(_ value: T, for key: Key) {
+    public func save<T: Numeric>(_ value: T, for key: Key) {
         userDefaults.set(value, forKey: prefixed(key))
     }
 
@@ -131,7 +131,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     /// - Parameters:
     ///   - value: The value to store.
     ///   - key: The typed key under which to store the value.
-    func save<T: StringProtocol>(_ value: T, for key: Key) {
+    public func save<T: StringProtocol>(_ value: T, for key: Key) {
         userDefaults.set(value, forKey: prefixed(key))
     }
 
@@ -140,7 +140,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     /// - Parameters:
     ///   - value: The value to store.
     ///   - key: The typed key under which to store the value.
-    func save<T: RawRepresentable>(_ value: T, for key: Key) where T.RawValue == Int {
+    public func save<T: RawRepresentable>(_ value: T, for key: Key) where T.RawValue == Int {
         userDefaults.set(value.rawValue, forKey: prefixed(key))
     }
 
@@ -149,7 +149,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     /// - Parameters:
     ///   - value: The value to store.
     ///   - key: The typed key under which to store the value.
-    func save<T: RawRepresentable>(_ value: T, for key: Key) where T.RawValue == String {
+    public func save<T: RawRepresentable>(_ value: T, for key: Key) where T.RawValue == String {
         userDefaults.set(value.rawValue, forKey: prefixed(key))
     }
 
@@ -159,7 +159,7 @@ class UserDefaultsStore<Key: RawRepresentable & Hashable>: KeyValueStore where K
     ///   - value: The value to encode and store.
     ///   - key: The typed key under which to store the value.
     /// - Note: If encoding fails, the error is dumped to the console and no value is stored.
-    func save<T: Codable>(_ value: T, for key: Key) {
+    public func save<T: Codable>(_ value: T, for key: Key) {
         do {
             let data = try encoder.encode(value)
             userDefaults.set(data, forKey: prefixed(key))
